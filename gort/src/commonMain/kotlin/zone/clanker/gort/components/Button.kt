@@ -14,12 +14,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.unit.Dp
-import zone.clanker.gort.foundation.GortSurface
+import zone.clanker.gort.foundation.Surface
 import zone.clanker.gort.theme.Gort
 import zone.clanker.gort.theme.GortShadowSize
 
-enum class GortButtonStyle {
+enum class ButtonStyle {
     Primary,
     Secondary,
     Tertiary,
@@ -27,10 +26,10 @@ enum class GortButtonStyle {
 }
 
 @Composable
-fun GortButton(
+fun Button(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    style: GortButtonStyle = GortButtonStyle.Primary,
+    style: ButtonStyle = ButtonStyle.Primary,
     enabled: Boolean = true,
     shape: Shape = Gort.corners.default,
     content: @Composable () -> Unit,
@@ -42,13 +41,12 @@ fun GortButton(
     val shadow = Gort.shadows.medium
 
     val (backgroundColor, contentColor) = when (style) {
-        GortButtonStyle.Primary -> colors.primary to colors.onPrimary
-        GortButtonStyle.Secondary -> colors.secondary to colors.onSecondary
-        GortButtonStyle.Tertiary -> colors.tertiary to colors.onTertiary
-        GortButtonStyle.Outlined -> colors.surface to colors.onSurface
+        ButtonStyle.Primary -> colors.primary to colors.onPrimary
+        ButtonStyle.Secondary -> colors.secondary to colors.onSecondary
+        ButtonStyle.Tertiary -> colors.tertiary to colors.onTertiary
+        ButtonStyle.Outlined -> colors.surface to colors.onSurface
     }
 
-    // When pressed, shadow shrinks to zero — button "pushes down"
     val shadowOffsetX by animateDpAsState(
         targetValue = if (isPressed) shadow.offsetX * 0.25f else shadow.offsetX,
         animationSpec = tween(durationMillis = if (isPressed) 80 else 120),
@@ -58,7 +56,7 @@ fun GortButton(
         animationSpec = tween(durationMillis = if (isPressed) 80 else 120),
     )
 
-    GortSurface(
+    Surface(
         modifier = modifier.clickable(
             interactionSource = interactionSource,
             indication = null,

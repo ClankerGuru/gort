@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "=== Pre-commit: running build ==="
+./gradlew build --no-daemon || {
+    echo ""
+    echo "❌ Build failed. Fix the errors before committing."
+    exit 1
+}
+echo "✅ Build passed."

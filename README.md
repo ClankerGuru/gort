@@ -6,7 +6,7 @@
 
 Gort is an opinionated UI component library that replaces Material 3 with thick borders, hard offset shadows, flat colors, and monospace type. Built on Compose Foundation — no Material dependency. Works on Android, iOS, Desktop, and Web.
 
-Named after the 8-foot robot from *The Day the Earth Stood Still* (1951). Silent. Powerful. Takes no prisoners.
+Named after the 8-foot robot from *The Day the Earth Stood Still* (1951).
 
 ## Install
 
@@ -21,7 +21,7 @@ dependencies {
 
 ```kotlin
 GortTheme {
-    GortButton(onClick = { /* destroy humanity */ }) {
+    Button(onClick = { }) {
         Text("LAUNCH")
     }
 }
@@ -58,24 +58,24 @@ GortTheme(
 ## Components
 
 ### Core
-- `GortButton` — Primary, secondary, tertiary, outlined
-- `GortCard` — Bordered card with offset shadow
-- `GortTextField` — Thick-bordered input
-- `GortToggle` — Mechanical switch
-- `GortCheckbox` — Chunky checkmark
-- `GortChip` — Tag/label
-- `GortDivider` — Thick rule
-- `GortBadge` — Notification dot
+- `Button` — Primary, secondary, tertiary, outlined
+- `Card` — Bordered card with offset shadow
+- `TextField` — Thick-bordered input
+- `Toggle` — Mechanical switch
+- `Checkbox` — Chunky checkmark
+- `Chip` — Tag/label
+- `Divider` — Thick rule
+- `Badge` — Notification dot
 
 ### Layout
-- `GortScaffold` — App shell
-- `GortTopBar` — Nav bar with thick bottom border
-- `GortBottomBar` — Tab bar with thick top border
+- `Scaffold` — App shell
+- `TopBar` — Nav bar with thick bottom border
+- `BottomBar` — Tab bar with thick top border
 
 ### Feedback
-- `GortDialog` — Modal with shadow
-- `GortSnackbar` — Toast notification
-- `GortTooltip` — Info popup
+- `Dialog` — Modal with shadow
+- `Snackbar` — Toast notification
+- `Tooltip` — Info popup
 
 ## Design Tokens
 
@@ -99,9 +99,7 @@ GortTheme(
 
 Material 3 is fine. It's also everywhere. Every Compose app looks the same.
 
-Gort is for apps that want to look like they were designed by a 1950s robot with strong opinions about typography and an unhealthy attachment to thick borders.
-
-> *"Klaatu barada nikto."*
+Gort is for apps that refuse to blend in.
 
 ## License
 

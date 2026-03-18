@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.Dp
 import zone.clanker.gort.theme.Gort
 
 @Composable
-fun GortDivider(
+fun Divider(
     modifier: Modifier = Modifier,
     color: Color = Gort.colors.border,
     thickness: Dp = Gort.borders.thick,

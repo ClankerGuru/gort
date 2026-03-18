@@ -10,10 +10,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
-import zone.clanker.gort.components.GortButton
-import zone.clanker.gort.components.GortButtonStyle
-import zone.clanker.gort.components.GortCard
-import zone.clanker.gort.components.GortDivider
+import zone.clanker.gort.components.Button
+import zone.clanker.gort.components.ButtonStyle
+import zone.clanker.gort.components.Card
+import zone.clanker.gort.components.Divider
 import zone.clanker.gort.theme.Gort
 import zone.clanker.gort.theme.GortTheme
 
@@ -34,9 +34,8 @@ fun CatalogApp() {
                 ),
             )
 
-            GortDivider()
+            Divider()
 
-            // Buttons
             BasicText(
                 text = "BUTTONS",
                 style = TextStyle(
@@ -46,25 +45,25 @@ fun CatalogApp() {
             )
 
             Row(horizontalArrangement = Arrangement.spacedBy(Gort.spacing.md)) {
-                GortButton(onClick = {}, style = GortButtonStyle.Primary) {
+                Button(onClick = {}, style = ButtonStyle.Primary) {
                     BasicText(
                         "PRIMARY",
                         style = TextStyle(color = Gort.colors.onPrimary),
                     )
                 }
-                GortButton(onClick = {}, style = GortButtonStyle.Secondary) {
+                Button(onClick = {}, style = ButtonStyle.Secondary) {
                     BasicText(
                         "SECONDARY",
                         style = TextStyle(color = Gort.colors.onSecondary),
                     )
                 }
-                GortButton(onClick = {}, style = GortButtonStyle.Tertiary) {
+                Button(onClick = {}, style = ButtonStyle.Tertiary) {
                     BasicText(
                         "TERTIARY",
                         style = TextStyle(color = Gort.colors.onTertiary),
                     )
                 }
-                GortButton(onClick = {}, style = GortButtonStyle.Outlined) {
+                Button(onClick = {}, style = ButtonStyle.Outlined) {
                     BasicText(
                         "OUTLINED",
                         style = TextStyle(color = Gort.colors.onSurface),
@@ -72,9 +71,8 @@ fun CatalogApp() {
                 }
             }
 
-            GortDivider()
+            Divider()
 
-            // Cards
             BasicText(
                 text = "CARDS",
                 style = TextStyle(
@@ -84,13 +82,13 @@ fun CatalogApp() {
             )
 
             Row(horizontalArrangement = Arrangement.spacedBy(Gort.spacing.lg)) {
-                GortCard {
+                Card {
                     BasicText(
                         "Default card with medium shadow.",
                         style = TextStyle(color = Gort.colors.onSurface),
                     )
                 }
-                GortCard(color = Gort.colors.primary) {
+                Card(color = Gort.colors.primary) {
                     BasicText(
                         "Primary colored card.",
                         style = TextStyle(color = Gort.colors.onPrimary),

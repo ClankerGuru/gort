@@ -5,7 +5,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,10 +20,10 @@ import zone.clanker.gort.theme.GortShadowSize
  *
  * Draws a solid-color shadow rectangle behind the content,
  * then the content box with border on top. No blur, no elevation —
- * just hard offset shadows like a 1950s poster.
+ * just hard offset shadows.
  */
 @Composable
-fun GortSurface(
+fun Surface(
     modifier: Modifier = Modifier,
     color: Color = Gort.colors.surface,
     borderColor: Color = Gort.colors.border,
