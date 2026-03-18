@@ -10,8 +10,6 @@ kotlin {
     jvm("desktop")
     @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
     wasmJs { browser() }
-    linuxX64()
-
     // iOS
     iosArm64()
     iosSimulatorArm64()
