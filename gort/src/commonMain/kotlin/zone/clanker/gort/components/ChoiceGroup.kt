@@ -3,12 +3,19 @@ package zone.clanker.gort.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.hoverable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import zone.clanker.gort.theme.Gort
 
 data class ChoiceItem(
@@ -36,20 +43,32 @@ fun ChoiceGroup(
     ) {
         items.forEach { item ->
             val isSelected = item.id in selectedIds
+            val interactionSource = remember { MutableInteractionSource() }
+            val isHovered by interactionSource.collectIsHoveredAsState()
 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .border(
                         if (isSelected) Gort.borders.thick else Gort.borders.default,
-                        if (isSelected) colors.primary else colors.border,
+                        when {
+                            isSelected -> colors.primary
+                            isHovered -> colors.primary.copy(alpha = 0.6f)
+                            else -> colors.border
+                        },
                         shape,
                     )
                     .background(
-                        if (isSelected) colors.primaryContainer else colors.surface,
+                        when {
+                            isSelected -> colors.primaryContainer
+                            isHovered -> colors.primaryContainer.copy(alpha = 0.2f)
+                            else -> colors.surface
+                        },
                         shape,
                     )
                     .clip(shape)
+                    .hoverable(interactionSource)
+                    .pointerHoverIcon(PointerIcon.Hand)
                     .clickable {
                         val newSelection = if (multiSelect) {
                             if (isSelected) selectedIds - item.id else selectedIds + item.id

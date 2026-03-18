@@ -2,7 +2,11 @@ package zone.clanker.gort.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,9 +16,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
 import zone.clanker.gort.theme.Gort
 
@@ -34,11 +41,26 @@ fun GortTabs(
         ) {
             tabs.forEachIndexed { index, title ->
                 val selected = index == selectedIndex
+                val interactionSource = remember { MutableInteractionSource() }
+                val isHovered by interactionSource.collectIsHoveredAsState()
+                val isFocused by interactionSource.collectIsFocusedAsState()
+
+                val focusModifier = if (isFocused) {
+                    Modifier.border(3.dp, colors.primary, Gort.corners.small)
+                } else Modifier
+
                 Column(
                     modifier = Modifier
                         .weight(1f)
+                        .then(focusModifier)
+                        .hoverable(interactionSource)
+                        .pointerHoverIcon(PointerIcon.Hand)
+                        .background(
+                            if (isHovered && !selected) colors.primaryContainer.copy(alpha = 0.3f)
+                            else androidx.compose.ui.graphics.Color.Transparent,
+                        )
                         .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
+                            interactionSource = interactionSource,
                             indication = null,
                         ) { onTabSelected(index) }
                         .padding(vertical = Gort.spacing.sm),

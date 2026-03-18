@@ -3,6 +3,9 @@ package zone.clanker.gort.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.hoverable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -14,6 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
 import zone.clanker.gort.foundation.Surface
 import zone.clanker.gort.theme.Gort
@@ -66,7 +71,7 @@ fun CommandPalette(
                 .padding(top = 80.dp)
                 .widthIn(max = 500.dp)
                 .fillMaxWidth(0.9f)
-                .clickable(enabled = false) {}, // prevent backdrop click-through
+                .clickable(enabled = false) {},
             color = colors.surface,
             borderColor = colors.border,
             shadow = Gort.shadows.large,
@@ -79,6 +84,7 @@ fun CommandPalette(
                     modifier = Modifier
                         .fillMaxWidth()
                         .focusRequester(focusRequester)
+                        .pointerHoverIcon(PointerIcon.Text)
                         .padding(spacing.md),
                     textStyle = Gort.typography.body.copy(color = colors.onSurface),
                     cursorBrush = SolidColor(colors.primary),
@@ -101,13 +107,22 @@ fun CommandPalette(
                     modifier = Modifier.heightIn(max = 400.dp),
                 ) {
                     items(filtered) { cmd ->
+                        val itemInteraction = remember { MutableInteractionSource() }
+                        val isItemHovered by itemInteraction.collectIsHoveredAsState()
+
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .hoverable(itemInteraction)
+                                .pointerHoverIcon(PointerIcon.Hand)
                                 .clickable {
                                     onSelect(cmd)
                                     query = ""
                                 }
+                                .background(
+                                    if (isItemHovered) colors.primaryContainer.copy(alpha = 0.4f)
+                                    else colors.surface,
+                                )
                                 .padding(horizontal = spacing.md, vertical = spacing.sm),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically,

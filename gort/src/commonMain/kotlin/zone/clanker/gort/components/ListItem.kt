@@ -1,11 +1,20 @@
 package zone.clanker.gort.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.hoverable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import zone.clanker.gort.theme.Gort
 
 @Composable
@@ -19,11 +28,24 @@ fun ListItem(
 ) {
     val colors = Gort.colors
     val spacing = Gort.spacing
+    val interactionSource = remember { MutableInteractionSource() }
+    val isHovered by interactionSource.collectIsHoveredAsState()
+    val isClickable = onClick != null
 
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
+            .then(
+                if (isClickable) Modifier
+                    .hoverable(interactionSource)
+                    .pointerHoverIcon(PointerIcon.Hand)
+                    .clickable(onClick = onClick)
+                else Modifier.hoverable(interactionSource)
+            )
+            .background(
+                if (isHovered && isClickable) colors.primaryContainer.copy(alpha = 0.2f)
+                else Color.Transparent,
+            )
             .padding(horizontal = spacing.md, vertical = spacing.sm),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -55,7 +77,6 @@ fun ListGroup(
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Column(modifier = modifier) {
-        // Content with dividers handled by caller using Divider() between items
         content()
     }
 }

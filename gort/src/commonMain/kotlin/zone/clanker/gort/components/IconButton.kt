@@ -3,8 +3,12 @@ package zone.clanker.gort.components
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -15,6 +19,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import zone.clanker.gort.foundation.Surface
@@ -33,21 +39,39 @@ fun IconButton(
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
+    val isHovered by interactionSource.collectIsHoveredAsState()
+    val isFocused by interactionSource.collectIsFocusedAsState()
     val shadow = Gort.shadows.small
     val anim = Gort.animation
+    val colors = Gort.colors
 
     val offsetX by animateDpAsState(
-        targetValue = if (isPressed) shadow.offsetX * 0.25f else shadow.offsetX,
+        targetValue = when {
+            isPressed -> shadow.offsetX * 0.25f
+            isHovered -> shadow.offsetX + 2.dp
+            else -> shadow.offsetX
+        },
         animationSpec = tween(if (isPressed) anim.durationFast else anim.durationMedium),
     )
     val offsetY by animateDpAsState(
-        targetValue = if (isPressed) shadow.offsetY * 0.25f else shadow.offsetY,
+        targetValue = when {
+            isPressed -> shadow.offsetY * 0.25f
+            isHovered -> shadow.offsetY + 2.dp
+            else -> shadow.offsetY
+        },
         animationSpec = tween(if (isPressed) anim.durationFast else anim.durationMedium),
     )
+
+    val focusModifier = if (isFocused) {
+        Modifier.border(3.dp, colors.primary, shape)
+    } else Modifier
 
     Surface(
         modifier = modifier
             .size(size)
+            .then(focusModifier)
+            .hoverable(interactionSource)
+            .pointerHoverIcon(PointerIcon.Hand)
             .clickable(
                 interactionSource = interactionSource,
                 indication = null,

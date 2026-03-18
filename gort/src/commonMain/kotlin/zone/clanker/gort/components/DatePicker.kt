@@ -3,11 +3,16 @@ package zone.clanker.gort.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.hoverable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
 import zone.clanker.gort.foundation.Surface
 import zone.clanker.gort.theme.Gort
@@ -46,9 +51,11 @@ fun DatePicker(
                 BasicText(
                     text = "◀",
                     style = Gort.typography.title.copy(color = colors.onSurface),
-                    modifier = Modifier.clickable {
-                        if (viewMonth == 1) { viewMonth = 12; viewYear-- } else viewMonth--
-                    },
+                    modifier = Modifier
+                        .pointerHoverIcon(PointerIcon.Hand)
+                        .clickable {
+                            if (viewMonth == 1) { viewMonth = 12; viewYear-- } else viewMonth--
+                        },
                 )
                 BasicText(
                     text = "${months[viewMonth - 1]} $viewYear",
@@ -57,9 +64,11 @@ fun DatePicker(
                 BasicText(
                     text = "▶",
                     style = Gort.typography.title.copy(color = colors.onSurface),
-                    modifier = Modifier.clickable {
-                        if (viewMonth == 12) { viewMonth = 1; viewYear++ } else viewMonth++
-                    },
+                    modifier = Modifier
+                        .pointerHoverIcon(PointerIcon.Hand)
+                        .clickable {
+                            if (viewMonth == 12) { viewMonth = 1; viewYear++ } else viewMonth++
+                        },
                 )
             }
 
@@ -92,16 +101,25 @@ fun DatePicker(
                                 it.year == viewYear && it.month == viewMonth && it.day == day
                             } == true
 
+                            val dayInteraction = remember { MutableInteractionSource() }
+                            val isDayHovered by dayInteraction.collectIsHoveredAsState()
+
                             Box(
                                 modifier = Modifier
                                     .weight(1f)
                                     .height(36.dp)
                                     .then(
-                                        if (isSelected) Modifier
-                                            .border(Gort.borders.default, colors.primary, Gort.corners.small)
-                                            .background(colors.primaryContainer, Gort.corners.small)
-                                        else Modifier
+                                        when {
+                                            isSelected -> Modifier
+                                                .border(Gort.borders.default, colors.primary, Gort.corners.small)
+                                                .background(colors.primaryContainer, Gort.corners.small)
+                                            isDayHovered -> Modifier
+                                                .background(colors.primaryContainer.copy(alpha = 0.3f), Gort.corners.small)
+                                            else -> Modifier
+                                        }
                                     )
+                                    .hoverable(dayInteraction)
+                                    .pointerHoverIcon(PointerIcon.Hand)
                                     .clickable { onDateSelect(GortDate(viewYear, viewMonth, day)) },
                                 contentAlignment = Alignment.Center,
                             ) {
@@ -121,9 +139,6 @@ fun DatePicker(
     }
 }
 
-/**
- * Display-only calendar month view.
- */
 @Composable
 fun Calendar(
     year: Int,
@@ -146,13 +161,11 @@ private fun daysInMonth(year: Int, month: Int): Int = when (month) {
     else -> 31
 }
 
-// Returns 0=Monday..6=Sunday using Zeller-like calculation
 private fun firstDayOfWeek(year: Int, month: Int): Int {
     var y = year; var m = month
     if (m < 3) { m += 12; y-- }
     val q = 1
     val k = y % 100; val j = y / 100
     val h = (q + (13 * (m + 1)) / 5 + k + k / 4 + j / 4 + 5 * j) % 7
-    // h: 0=Saturday, 1=Sunday, 2=Monday...
-    return (h + 5) % 7 // convert to 0=Monday
+    return (h + 5) % 7
 }

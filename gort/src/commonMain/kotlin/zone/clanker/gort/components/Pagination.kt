@@ -3,11 +3,18 @@ package zone.clanker.gort.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.hoverable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
 import zone.clanker.gort.theme.Gort
 
@@ -26,7 +33,6 @@ fun Pagination(
         horizontalArrangement = Arrangement.spacedBy(spacing.xs),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        // Previous
         PageButton(
             text = "←",
             enabled = currentPage > 1,
@@ -34,7 +40,6 @@ fun Pagination(
             onClick = { onPageChange(currentPage - 1) },
         )
 
-        // Page numbers
         val range = pageRange(currentPage, totalPages)
         range.forEach { page ->
             if (page == -1) {
@@ -53,7 +58,6 @@ fun Pagination(
             }
         }
 
-        // Next
         PageButton(
             text = "→",
             enabled = currentPage < totalPages,
@@ -71,22 +75,32 @@ private fun PageButton(
     onClick: () -> Unit,
 ) {
     val colors = Gort.colors
+    val interactionSource = remember { MutableInteractionSource() }
+    val isHovered by interactionSource.collectIsHoveredAsState()
+
     Box(
         modifier = Modifier
             .defaultMinSize(minWidth = 36.dp, minHeight = 36.dp)
             .border(
                 if (selected) Gort.borders.thick else Gort.borders.default,
-                if (selected) colors.primary else colors.border,
+                when {
+                    selected -> colors.primary
+                    isHovered && enabled -> colors.primary.copy(alpha = 0.6f)
+                    else -> colors.border
+                },
                 Gort.corners.small,
             )
             .background(
                 when {
                     selected -> colors.primary
+                    isHovered && enabled -> colors.primaryContainer.copy(alpha = 0.3f)
                     !enabled -> colors.background
                     else -> colors.surface
                 },
                 Gort.corners.small,
             )
+            .hoverable(interactionSource)
+            .pointerHoverIcon(if (enabled) PointerIcon.Hand else PointerIcon.Default)
             .clickable(enabled = enabled, onClick = onClick)
             .padding(Gort.spacing.xs),
         contentAlignment = Alignment.Center,
@@ -108,11 +122,11 @@ private fun pageRange(current: Int, total: Int): List<Int> {
     if (total <= 7) return (1..total).toList()
     return buildList {
         add(1)
-        if (current > 3) add(-1) // ellipsis
+        if (current > 3) add(-1)
         val start = maxOf(2, current - 1)
         val end = minOf(total - 1, current + 1)
         addAll(start..end)
-        if (current < total - 2) add(-1) // ellipsis
+        if (current < total - 2) add(-1)
         add(total)
     }
 }
