@@ -45,25 +45,27 @@ jobs:
 
       - name: Build and test
         run: ./gradlew build
+        env:
+          GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=512m"
 
       - name: Publish test results
         uses: dorny/test-reporter@v1
-        if: always()
+        if: always() && hashFiles('**/build/test-results/test/*.xml') != ''
         with:
           name: Test Results
           path: '**/build/test-results/test/*.xml'
           reporter: java-junit
 
       - name: Publish to Maven Central
-        continue-on-error: true
-        run: ./gradlew publishAllPublicationsToMavenCentralRepository
+        run: ./gradlew :gort:publishAllPublicationsToMavenCentralRepository
         env:
           ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.SONATYPE_USERNAME }}
           ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.SONATYPE_PASSWORD }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=512m"
 
       - name: Attach JARs to release
         run: |
-          find . -path '*/build/libs/*.jar' -exec gh release upload "${{ github.event.release.tag_name }}" {} --clobber \;
+          find . -path '*/gort/build/libs/*.jar' -exec gh release upload "${{ github.event.release.tag_name }}" {} --clobber \;
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
