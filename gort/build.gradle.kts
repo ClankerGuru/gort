@@ -10,6 +10,8 @@ kotlin {
     jvm("desktop")
     @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
     wasmJs { browser() }
+    js { browser(); nodejs() }
+    mingwX64()
 
     // iOS
     iosArm64()
@@ -17,6 +19,12 @@ kotlin {
 
     // macOS
     macosArm64()
+
+    // watchOS
+    watchosArm64()
+
+    // tvOS
+    tvosArm64()
 
     // Configure all Apple frameworks
     targets.withType<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget> {
