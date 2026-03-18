@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "=== Pre-commit: running build ==="
+
+OS="$(uname -s)"
+case "$OS" in
+    Darwin)
+        # macOS: full build (all targets including iOS/macOS native)
+        ./gradlew build --no-daemon
+        ;;
+    *)
+        # Linux/other: desktop + wasmJs only (no native toolchains)
+        ./gradlew \
+            :gort:compileKotlinDesktop \
+            :gort:compileKotlinWasmJs \
+            :gort:desktopTest \
+            :catalog:compileKotlinDesktop \
+            :catalog:compileKotlinWasmJs \
+            --no-daemon
+        ;;
+esac
+
+echo "✅ Build passed."

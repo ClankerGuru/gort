@@ -1,0 +1,68 @@
+package zone.clanker.gort.components
+
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import zone.clanker.gort.foundation.Surface
+import zone.clanker.gort.theme.Gort
+import zone.clanker.gort.theme.GortShadowSize
+
+@Composable
+fun IconButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    color: Color = Gort.colors.surface,
+    size: Dp = 40.dp,
+    shape: Shape = Gort.corners.default,
+    content: @Composable () -> Unit,
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val shadow = Gort.shadows.small
+    val anim = Gort.animation
+
+    val offsetX by animateDpAsState(
+        targetValue = if (isPressed) shadow.offsetX * 0.25f else shadow.offsetX,
+        animationSpec = tween(if (isPressed) anim.durationFast else anim.durationMedium),
+    )
+    val offsetY by animateDpAsState(
+        targetValue = if (isPressed) shadow.offsetY * 0.25f else shadow.offsetY,
+        animationSpec = tween(if (isPressed) anim.durationFast else anim.durationMedium),
+    )
+
+    Surface(
+        modifier = modifier
+            .size(size)
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null,
+                enabled = enabled,
+                onClick = onClick,
+            ),
+        color = color,
+        shadow = GortShadowSize(offsetX, offsetY),
+        shape = shape,
+    ) {
+        Box(
+            modifier = Modifier.padding(Gort.spacing.xs),
+            contentAlignment = Alignment.Center,
+        ) {
+            content()
+        }
+    }
+}
