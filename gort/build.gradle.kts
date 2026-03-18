@@ -23,9 +23,6 @@ kotlin {
     // watchOS
     watchosArm64()
 
-    // tvOS
-    tvosArm64()
-
     // Configure all Apple frameworks
     targets.withType<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget> {
         binaries.framework {
