@@ -13,12 +13,10 @@ kotlin {
 
     // iOS
     iosArm64()
-    iosX64()
     iosSimulatorArm64()
 
     // macOS
     macosArm64()
-    macosX64()
 
     // Configure all Apple frameworks
     targets.withType<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget> {
