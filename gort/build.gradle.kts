@@ -8,13 +8,21 @@ plugins {
 kotlin {
     androidTarget()
     jvm("desktop")
+    @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
     wasmJs { browser() }
 
-    listOf(
-        iosArm64(),
-        iosSimulatorArm64(),
-    ).forEach { target ->
-        target.binaries.framework {
+    // iOS
+    iosArm64()
+    iosX64()
+    iosSimulatorArm64()
+
+    // macOS
+    macosArm64()
+    macosX64()
+
+    // Configure all Apple frameworks
+    targets.withType<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget> {
+        binaries.framework {
             baseName = "gort"
             isStatic = true
         }
