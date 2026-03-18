@@ -1,100 +1,123 @@
 package zone.clanker.gort.catalog
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicText
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.sp
-import zone.clanker.gort.components.Button
-import zone.clanker.gort.components.ButtonStyle
-import zone.clanker.gort.components.Card
-import zone.clanker.gort.components.Divider
+import androidx.compose.ui.unit.dp
+import zone.clanker.gort.components.GortDivider
+import zone.clanker.gort.components.GortTopBar
 import zone.clanker.gort.theme.Gort
+import zone.clanker.gort.theme.GortColors
 import zone.clanker.gort.theme.GortTheme
+
+enum class CatalogSection(val label: String) {
+    Buttons("🔘 Actions"),
+    Inputs("📝 Inputs"),
+    Display("📊 Display"),
+    Navigation("🧭 Navigation"),
+    Feedback("💬 Feedback"),
+    Compound("🧩 Compound"),
+    Data("📋 Data"),
+    Chat("💭 Chat"),
+}
 
 @Composable
 fun CatalogApp() {
-    GortTheme {
+    var isDark by remember { mutableStateOf(false) }
+    var currentSection by remember { mutableStateOf(CatalogSection.Buttons) }
+
+    GortTheme(colors = if (isDark) GortColors.dark() else GortColors.light()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(Gort.spacing.xl),
-            verticalArrangement = Arrangement.spacedBy(Gort.spacing.lg),
+                .background(Gort.colors.background),
         ) {
-            BasicText(
-                text = "GORT COMPONENT CATALOG",
-                style = TextStyle(
-                    color = Gort.colors.onSurface,
-                    fontSize = 24.sp,
-                ),
+            GortTopBar(
+                title = {
+                    BasicText("Gort Catalog", style = Gort.typography.headline.copy(color = Gort.colors.onSurface))
+                },
+                actions = {
+                    BasicText(
+                        text = if (isDark) "☀️ Light" else "🌙 Dark",
+                        style = Gort.typography.label.copy(color = Gort.colors.onSurface),
+                        modifier = Modifier.clickable { isDark = !isDark },
+                    )
+                },
             )
 
-            Divider()
-
-            BasicText(
-                text = "BUTTONS",
-                style = TextStyle(
-                    color = Gort.colors.onSurface,
-                    fontSize = 18.sp,
-                ),
-            )
-
-            Row(horizontalArrangement = Arrangement.spacedBy(Gort.spacing.md)) {
-                Button(onClick = {}, style = ButtonStyle.Primary) {
-                    BasicText(
-                        "PRIMARY",
-                        style = TextStyle(color = Gort.colors.onPrimary),
-                    )
+            Row(modifier = Modifier.fillMaxSize()) {
+                // Sidebar
+                Column(
+                    modifier = Modifier
+                        .width(200.dp)
+                        .fillMaxHeight()
+                        .background(Gort.colors.surface)
+                        .verticalScroll(rememberScrollState()),
+                ) {
+                    CatalogSection.entries.forEach { section ->
+                        val isSelected = section == currentSection
+                        BasicText(
+                            text = section.label,
+                            style = Gort.typography.body.copy(
+                                color = if (isSelected) Gort.colors.primary else Gort.colors.onSurface,
+                            ),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { currentSection = section }
+                                .then(
+                                    if (isSelected) Modifier.background(Gort.colors.primaryContainer)
+                                    else Modifier
+                                )
+                                .padding(Gort.spacing.md),
+                        )
+                    }
                 }
-                Button(onClick = {}, style = ButtonStyle.Secondary) {
-                    BasicText(
-                        "SECONDARY",
-                        style = TextStyle(color = Gort.colors.onSecondary),
-                    )
-                }
-                Button(onClick = {}, style = ButtonStyle.Tertiary) {
-                    BasicText(
-                        "TERTIARY",
-                        style = TextStyle(color = Gort.colors.onTertiary),
-                    )
-                }
-                Button(onClick = {}, style = ButtonStyle.Outlined) {
-                    BasicText(
-                        "OUTLINED",
-                        style = TextStyle(color = Gort.colors.onSurface),
-                    )
-                }
-            }
 
-            Divider()
+                GortDivider(vertical = true)
 
-            BasicText(
-                text = "CARDS",
-                style = TextStyle(
-                    color = Gort.colors.onSurface,
-                    fontSize = 18.sp,
-                ),
-            )
-
-            Row(horizontalArrangement = Arrangement.spacedBy(Gort.spacing.lg)) {
-                Card {
-                    BasicText(
-                        "Default card with medium shadow.",
-                        style = TextStyle(color = Gort.colors.onSurface),
-                    )
-                }
-                Card(color = Gort.colors.primary) {
-                    BasicText(
-                        "Primary colored card.",
-                        style = TextStyle(color = Gort.colors.onPrimary),
-                    )
+                // Content
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .verticalScroll(rememberScrollState())
+                        .padding(Gort.spacing.lg),
+                    verticalArrangement = Arrangement.spacedBy(Gort.spacing.lg),
+                ) {
+                    when (currentSection) {
+                        CatalogSection.Buttons -> ButtonsScreen()
+                        CatalogSection.Inputs -> InputsScreen()
+                        CatalogSection.Display -> DisplayScreen()
+                        CatalogSection.Navigation -> NavigationScreen()
+                        CatalogSection.Feedback -> FeedbackScreen()
+                        CatalogSection.Compound -> CompoundScreen()
+                        CatalogSection.Data -> DataScreen()
+                        CatalogSection.Chat -> ChatScreen()
+                    }
                 }
             }
         }
     }
+}
+
+@Composable
+fun SectionTitle(text: String) {
+    BasicText(
+        text = text,
+        style = Gort.typography.headline.copy(color = Gort.colors.onSurface),
+    )
+}
+
+@Composable
+fun ComponentLabel(text: String) {
+    BasicText(
+        text = text,
+        style = Gort.typography.label.copy(color = Gort.colors.onSurface.copy(alpha = 0.6f)),
+        modifier = Modifier.padding(top = Gort.spacing.sm),
+    )
 }

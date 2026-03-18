@@ -56,3 +56,20 @@ fun Surface(
         )
     }
 }
+
+/**
+ * Convenience alias used as a standalone container component.
+ */
+@Composable
+fun GortSurface(
+    modifier: Modifier = Modifier,
+    color: Color = Gort.colors.surface,
+    borderColor: Color = Gort.colors.border,
+    shadowColor: Color = Gort.colors.shadow,
+    borderWidth: Dp = Gort.borders.default,
+    shadow: GortShadowSize = Gort.shadows.none,
+    shape: Shape = Gort.corners.default,
+    content: @Composable BoxScope.() -> Unit,
+) {
+    Surface(modifier, color, borderColor, shadowColor, borderWidth, shadow, shape, content)
+}

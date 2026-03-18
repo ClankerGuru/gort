@@ -11,6 +11,8 @@ fun GortTheme(
     shadows: GortShadows = GortShadows(),
     spacing: GortSpacing = GortSpacing(),
     corners: GortCorners = GortCorners(),
+    typography: GortTypography = GortTypography(),
+    animation: GortAnimation = GortAnimation(),
     content: @Composable () -> Unit,
 ) {
     CompositionLocalProvider(
@@ -19,6 +21,8 @@ fun GortTheme(
         LocalGortShadows provides shadows,
         LocalGortSpacing provides spacing,
         LocalGortCorners provides corners,
+        LocalGortTypography provides typography,
+        LocalGortAnimation provides animation,
         content = content,
     )
 }
@@ -43,4 +47,12 @@ object Gort {
     val corners: GortCorners
         @Composable @ReadOnlyComposable
         get() = LocalGortCorners.current
+
+    val typography: GortTypography
+        @Composable @ReadOnlyComposable
+        get() = LocalGortTypography.current
+
+    val animation: GortAnimation
+        @Composable @ReadOnlyComposable
+        get() = LocalGortAnimation.current
 }
