@@ -2,7 +2,15 @@
 set -euo pipefail
 
 echo "=== Pre-commit: running build ==="
-./gradlew build --no-daemon || {
+# Skip iOS/native compilation locally — too heavy for constrained environments.
+# Full multi-platform build runs in CI.
+./gradlew \
+    :gort:compileKotlinDesktop \
+    :gort:compileKotlinWasmJs \
+    :gort:desktopTest \
+    :catalog:compileKotlinDesktop \
+    :catalog:compileKotlinWasmJs \
+    --no-daemon || {
     echo ""
     echo "❌ Build failed. Fix the errors before committing."
     exit 1
