@@ -10,7 +10,6 @@ kotlin {
     jvm("desktop")
     @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
     wasmJs { browser() }
-    js { browser(); nodejs() }
     linuxX64()
     mingwX64()
 
