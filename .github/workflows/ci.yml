@@ -28,10 +28,12 @@ jobs:
 
       - name: Build and test
         run: ./gradlew build
+        env:
+          GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=512m"
 
       - name: Publish test results
         uses: dorny/test-reporter@v1
-        if: always()
+        if: always() && hashFiles('**/build/test-results/test/*.xml') != ''
         with:
           name: Test Results
           path: '**/build/test-results/test/*.xml'
