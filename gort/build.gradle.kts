@@ -29,6 +29,7 @@ kotlin {
             implementation(compose.foundation)
             implementation(compose.runtime)
             implementation(compose.ui)
+            api(libs.lucide)
             // NO Material 3 — this is intentional
         }
         commonTest.dependencies {

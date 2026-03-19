@@ -1,9 +1,13 @@
 package zone.clanker.gort.catalog
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.unit.dp
+import com.composables.icons.lucide.*
 import zone.clanker.gort.components.*
 import zone.clanker.gort.theme.Gort
 
@@ -60,13 +64,13 @@ fun ButtonsScreen() {
         name = "IconButton",
         description = "Compact icon-only button for toolbar actions and inline controls.",
         code = """IconButton(onClick = {}) {
-    BasicText("✏️")
+    Image(Lucide.Pencil, contentDescription = "Edit")
 }""",
     ) {
         Row(horizontalArrangement = Arrangement.spacedBy(Gort.spacing.sm)) {
-            IconButton(onClick = {}) { BasicText("✏️", style = Gort.typography.body) }
-            IconButton(onClick = {}) { BasicText("🗑️", style = Gort.typography.body) }
-            IconButton(onClick = {}) { BasicText("⭐", style = Gort.typography.body) }
+            IconButton(onClick = {}) { Image(Lucide.Pencil, contentDescription = "Edit", colorFilter = ColorFilter.tint(Gort.colors.onSurface), modifier = Modifier.size(20.dp)) }
+            IconButton(onClick = {}) { Image(Lucide.Trash2, contentDescription = "Delete", colorFilter = ColorFilter.tint(Gort.colors.onSurface), modifier = Modifier.size(20.dp)) }
+            IconButton(onClick = {}) { Image(Lucide.Star, contentDescription = "Favorite", colorFilter = ColorFilter.tint(Gort.colors.onSurface), modifier = Modifier.size(20.dp)) }
         }
     }
 

@@ -1,6 +1,8 @@
 package zone.clanker.gort.catalog
 
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -20,21 +22,23 @@ fun DataScreen() {
     rows = listOf(listOf("Xavier", "Owner", "Active", "2 min ago"), …),
 )""",
     ) {
-        Table(
-            columns = listOf(
-                TableColumn("Name", width = 150.dp, sortable = true),
-                TableColumn("Role", width = 120.dp),
-                TableColumn("Status", width = 100.dp),
-                TableColumn("Last Active", width = 140.dp, sortable = true),
-            ),
-            rows = listOf(
-                listOf("Xavier", "Owner", "Active", "2 min ago"),
-                listOf("Gort", "Robot", "Online", "Just now"),
-                listOf("Klaatu", "Diplomat", "Away", "1951"),
-                listOf("HAL 9000", "AI", "Error", "2001"),
-                listOf("TARS", "Robot", "Active", "Yesterday"),
-            ),
-        )
+        Box(modifier = Modifier.horizontalScroll(rememberScrollState())) {
+            Table(
+                columns = listOf(
+                    TableColumn("Name", width = 150.dp, sortable = true),
+                    TableColumn("Role", width = 120.dp),
+                    TableColumn("Status", width = 100.dp),
+                    TableColumn("Last Active", width = 140.dp, sortable = true),
+                ),
+                rows = listOf(
+                    listOf("Xavier", "Owner", "Active", "2 min ago"),
+                    listOf("Gort", "Robot", "Online", "Just now"),
+                    listOf("Klaatu", "Diplomat", "Away", "1951"),
+                    listOf("HAL 9000", "AI", "Error", "2001"),
+                    listOf("TARS", "Robot", "Active", "Yesterday"),
+                ),
+            )
+        }
     }
 
     ShowcaseSection("Lists")

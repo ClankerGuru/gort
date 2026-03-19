@@ -82,25 +82,25 @@ fun NavigationScreen() {
         name = "FileTree",
         description = "Expandable tree view for file system browsing, project structures, or hierarchical data.",
         code = """FileTree(
-    roots = listOf(TreeNode("src", icon = "📁", children = listOf(…))),
+    roots = listOf(TreeNode("src", icon = "▸", children = listOf(…))),
     initialExpandedDepth = 2,
 )""",
     ) {
         FileTree(
             roots = listOf(
-                TreeNode("src", icon = "📁", children = listOf(
-                    TreeNode("main", icon = "📁", children = listOf(
-                        TreeNode("kotlin", icon = "📁", children = listOf(
-                            TreeNode("App.kt", icon = "📄"),
-                            TreeNode("Theme.kt", icon = "📄"),
+                TreeNode("src", icon = "▸", children = listOf(
+                    TreeNode("main", icon = "▸", children = listOf(
+                        TreeNode("kotlin", icon = "▸", children = listOf(
+                            TreeNode("App.kt", icon = "·"),
+                            TreeNode("Theme.kt", icon = "·"),
                         )),
                     )),
-                    TreeNode("test", icon = "📁", children = listOf(
-                        TreeNode("AppTest.kt", icon = "🧪"),
+                    TreeNode("test", icon = "▸", children = listOf(
+                        TreeNode("AppTest.kt", icon = "·"),
                     )),
                 )),
-                TreeNode("build.gradle.kts", icon = "⚙️"),
-                TreeNode("README.md", icon = "📝"),
+                TreeNode("build.gradle.kts", icon = "·"),
+                TreeNode("README.md", icon = "·"),
             ),
             initialExpandedDepth = 2,
         )

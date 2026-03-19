@@ -1,5 +1,6 @@
 package zone.clanker.gort.catalog
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -9,9 +10,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.composables.icons.lucide.*
 import zone.clanker.gort.components.GortDivider
 import zone.clanker.gort.foundation.WindowSize
 import zone.clanker.gort.foundation.currentWindowSize
@@ -20,16 +24,16 @@ import zone.clanker.gort.theme.GortColors
 import zone.clanker.gort.theme.GortTheme
 import zone.clanker.gort.theme.GortTypography
 
-enum class CatalogSection(val label: String, val icon: String) {
-    Theme("🎨 Theme", "🎨"),
-    Buttons("🔘 Actions", "🔘"),
-    Inputs("📝 Inputs", "📝"),
-    Display("📊 Display", "📊"),
-    Navigation("🧭 Navigation", "🧭"),
-    Feedback("💬 Feedback", "💬"),
-    Compound("🧩 Compound", "🧩"),
-    Data("📋 Data", "📋"),
-    Chat("💭 Chat", "💭"),
+enum class CatalogSection(val label: String, val icon: ImageVector) {
+    Theme("Theme", Lucide.Palette),
+    Buttons("Actions", Lucide.MousePointerClick),
+    Inputs("Inputs", Lucide.TextCursorInput),
+    Display("Display", Lucide.ChartBar),
+    Navigation("Navigation", Lucide.Compass),
+    Feedback("Feedback", Lucide.MessageSquare),
+    Compound("Compound", Lucide.Puzzle),
+    Data("Data", Lucide.Database),
+    Chat("Chat", Lucide.MessageCircle),
 }
 
 @Composable
@@ -125,10 +129,11 @@ private fun Masthead(isDark: Boolean, onToggleDark: () -> Unit) {
                     fontSize = 22.sp,
                 ),
             )
-            BasicText(
-                text = if (isDark) "☀️" else "🌙",
-                style = Gort.typography.titleLarge.copy(color = colors.onSurface),
-                modifier = Modifier.clickable(onClick = onToggleDark),
+            Image(
+                imageVector = if (isDark) Lucide.Sun else Lucide.Moon,
+                contentDescription = if (isDark) "Light mode" else "Dark mode",
+                colorFilter = ColorFilter.tint(colors.onSurface),
+                modifier = Modifier.size(22.dp).clickable(onClick = onToggleDark),
             )
         }
         BasicText(
@@ -169,13 +174,15 @@ private fun NavRail(
                     .padding(vertical = 10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                BasicText(
-                    text = section.icon,
-                    style = Gort.typography.bodyLarge,
+                Image(
+                    imageVector = section.icon,
+                    contentDescription = section.label,
+                    colorFilter = ColorFilter.tint(if (isSelected) colors.primary else colors.onSurface.copy(alpha = 0.7f)),
+                    modifier = Modifier.size(22.dp),
                 )
                 Spacer(modifier = Modifier.height(2.dp))
                 BasicText(
-                    text = section.label.substringAfter(" "),
+                    text = section.label,
                     style = Gort.typography.labelSmall.copy(
                         color = if (isSelected) colors.primary else colors.onSurface.copy(alpha = 0.7f),
                     ),
@@ -207,13 +214,15 @@ private fun BottomNavBar(
                     .padding(horizontal = 4.dp, vertical = 4.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                BasicText(
-                    text = section.icon,
-                    style = Gort.typography.bodyMedium,
+                Image(
+                    imageVector = section.icon,
+                    contentDescription = section.label,
+                    colorFilter = ColorFilter.tint(if (isSelected) colors.primary else colors.onSurface.copy(alpha = 0.7f)),
+                    modifier = Modifier.size(20.dp),
                 )
                 if (showLabels) {
                     BasicText(
-                        text = section.label.substringAfter(" "),
+                        text = section.label,
                         style = Gort.typography.labelSmall.copy(
                             color = if (isSelected) colors.primary else colors.onSurface.copy(alpha = 0.7f),
                             fontSize = 9.sp,
