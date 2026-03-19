@@ -18,6 +18,7 @@ import zone.clanker.gort.foundation.currentWindowSize
 import zone.clanker.gort.theme.Gort
 import zone.clanker.gort.theme.GortColors
 import zone.clanker.gort.theme.GortTheme
+import zone.clanker.gort.theme.GortTypography
 
 enum class CatalogSection(val label: String, val icon: String) {
     Theme("🎨 Theme", "🎨"),
@@ -35,8 +36,10 @@ enum class CatalogSection(val label: String, val icon: String) {
 fun CatalogApp() {
     var isDark by remember { mutableStateOf(false) }
     var currentSection by remember { mutableStateOf(CatalogSection.Buttons) }
+    var currentColors by remember { mutableStateOf(GortColors.light()) }
+    var currentTypography by remember { mutableStateOf(GortTypography()) }
 
-    GortTheme(colors = if (isDark) GortColors.dark() else GortColors.light()) {
+    GortTheme(colors = currentColors, typography = currentTypography) {
         BoxWithConstraints(
             modifier = Modifier.fillMaxSize().background(Gort.colors.background),
         ) {
@@ -44,7 +47,10 @@ fun CatalogApp() {
 
             Column(modifier = Modifier.fillMaxSize()) {
                 // Masthead
-                Masthead(isDark = isDark, onToggleDark = { isDark = !isDark })
+                Masthead(isDark = isDark, onToggleDark = {
+                    isDark = !isDark
+                    currentColors = if (isDark) GortColors.dark() else GortColors.light()
+                })
 
                 // Content area
                 when (windowSize) {
@@ -65,6 +71,9 @@ fun CatalogApp() {
                             // Content
                             CatalogContent(
                                 section = currentSection,
+                                isDark = isDark,
+                                onColorsChange = { currentColors = it },
+                                onTypographyChange = { currentTypography = it },
                                 modifier = Modifier.weight(1f),
                             )
                         }
@@ -74,6 +83,9 @@ fun CatalogApp() {
                         Box(modifier = Modifier.weight(1f)) {
                             CatalogContent(
                                 section = currentSection,
+                                isDark = isDark,
+                                onColorsChange = { currentColors = it },
+                                onTypographyChange = { currentTypography = it },
                                 modifier = Modifier.fillMaxSize(),
                             )
                         }
@@ -216,6 +228,9 @@ private fun BottomNavBar(
 @Composable
 private fun CatalogContent(
     section: CatalogSection,
+    isDark: Boolean = false,
+    onColorsChange: (GortColors) -> Unit = {},
+    onTypographyChange: (GortTypography) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -231,7 +246,11 @@ private fun CatalogContent(
             verticalArrangement = Arrangement.spacedBy(Gort.spacing.lg),
         ) {
             when (section) {
-                CatalogSection.Theme -> ThemeScreen()
+                CatalogSection.Theme -> ThemeScreen(
+                    isDark = isDark,
+                    onColorsChange = onColorsChange,
+                    onTypographyChange = onTypographyChange,
+                )
                 CatalogSection.Buttons -> ButtonsScreen()
                 CatalogSection.Inputs -> InputsScreen()
                 CatalogSection.Display -> DisplayScreen()

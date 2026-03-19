@@ -8,80 +8,155 @@ import zone.clanker.gort.theme.Gort
 
 @Composable
 fun InputsScreen() {
-    SectionTitle("Text Field")
-    var text by remember { mutableStateOf("") }
-    TextField(value = text, onValueChange = { text = it }, placeholder = "Type here…")
+    ShowcaseSection("Text Inputs")
 
-    SectionTitle("Text Area")
-    var area by remember { mutableStateOf("") }
-    TextArea(value = area, onValueChange = { area = it }, placeholder = "Multi-line input…")
+    ComponentShowcase(
+        name = "TextField",
+        description = "Single-line text input with placeholder support and neobrutalist border.",
+        code = """TextField(value = text, onValueChange = { text = it }, placeholder = "Type here…")""",
+    ) {
+        var text by remember { mutableStateOf("") }
+        TextField(value = text, onValueChange = { text = it }, placeholder = "Type here…")
+    }
 
-    SectionTitle("Checkbox")
-    var checked by remember { mutableStateOf(false) }
-    Checkbox(checked = checked, onCheckedChange = { checked = it })
+    ComponentShowcase(
+        name = "TextArea",
+        description = "Multi-line text input for longer content like comments or descriptions.",
+        code = """TextArea(value = area, onValueChange = { area = it }, placeholder = "Multi-line input…")""",
+    ) {
+        var area by remember { mutableStateOf("") }
+        TextArea(value = area, onValueChange = { area = it }, placeholder = "Multi-line input…")
+    }
 
-    SectionTitle("Radio Button")
-    var radio by remember { mutableIntStateOf(0) }
-    Column(verticalArrangement = Arrangement.spacedBy(Gort.spacing.sm)) {
-        listOf("Option A", "Option B", "Option C").forEachIndexed { i, label ->
-            RadioButton(selected = radio == i, onClick = { radio = i })
+    ShowcaseSection("Toggles & Checks")
+
+    ComponentShowcase(
+        name = "Checkbox",
+        description = "Boolean toggle for options that can be independently enabled or disabled.",
+        code = """Checkbox(checked = checked, onCheckedChange = { checked = it })""",
+        controls = {
+            var checked by remember { mutableStateOf(false) }
+            Checkbox(checked = checked, onCheckedChange = { checked = it })
+        },
+    ) {
+        var checked by remember { mutableStateOf(true) }
+        Checkbox(checked = checked, onCheckedChange = { checked = it })
+    }
+
+    ComponentShowcase(
+        name = "RadioButton",
+        description = "Mutually exclusive selection from a set of options.",
+        code = """RadioButton(selected = radio == 0, onClick = { radio = 0 })""",
+    ) {
+        var radio by remember { mutableIntStateOf(0) }
+        Column(verticalArrangement = Arrangement.spacedBy(Gort.spacing.sm)) {
+            listOf("Option A", "Option B", "Option C").forEachIndexed { i, _ ->
+                RadioButton(selected = radio == i, onClick = { radio = i })
+            }
         }
     }
 
-    SectionTitle("Toggle")
-    var toggled by remember { mutableStateOf(false) }
-    Toggle(checked = toggled, onCheckedChange = { toggled = it })
+    ComponentShowcase(
+        name = "Toggle",
+        description = "On/off switch for binary settings that take effect immediately.",
+        code = """Toggle(checked = toggled, onCheckedChange = { toggled = it })""",
+    ) {
+        var toggled by remember { mutableStateOf(false) }
+        Toggle(checked = toggled, onCheckedChange = { toggled = it })
+    }
 
-    SectionTitle("Slider")
-    var sliderValue by remember { mutableFloatStateOf(0.5f) }
-    GortSlider(value = sliderValue, onValueChange = { sliderValue = it })
+    ShowcaseSection("Range & Value Inputs")
 
-    SectionTitle("Number Stepper")
-    var number by remember { mutableIntStateOf(5) }
-    NumberStepper(value = number, onValueChange = { number = it }, min = 0, max = 20)
+    ComponentShowcase(
+        name = "Slider",
+        description = "Continuous value selector for ranges like volume, brightness, or percentages.",
+        code = """GortSlider(value = sliderValue, onValueChange = { sliderValue = it })""",
+    ) {
+        var sliderValue by remember { mutableFloatStateOf(0.5f) }
+        GortSlider(value = sliderValue, onValueChange = { sliderValue = it })
+    }
 
-    SectionTitle("Rating")
-    var rating by remember { mutableIntStateOf(3) }
-    Rating(value = rating, onValueChange = { rating = it })
+    ComponentShowcase(
+        name = "NumberStepper",
+        description = "Increment/decrement control for precise numeric values within a bounded range.",
+        code = """NumberStepper(value = number, onValueChange = { number = it }, min = 0, max = 20)""",
+    ) {
+        var number by remember { mutableIntStateOf(5) }
+        NumberStepper(value = number, onValueChange = { number = it }, min = 0, max = 20)
+    }
 
-    SectionTitle("Form")
-    Form {
-        FormField(label = "Email", required = true, helper = "We'll never share your email") {
-            var email by remember { mutableStateOf("") }
-            TextField(value = email, onValueChange = { email = it }, placeholder = "you@example.com")
-        }
-        FormField(label = "Password", required = true) {
-            var pw by remember { mutableStateOf("") }
-            TextField(value = pw, onValueChange = { pw = it }, placeholder = "••••••••")
-        }
-        FormField(label = "Bio") {
-            var bio by remember { mutableStateOf("") }
-            TextArea(value = bio, onValueChange = { bio = it }, placeholder = "Tell us about yourself")
+    ComponentShowcase(
+        name = "Rating",
+        description = "Star-based rating input for reviews and feedback.",
+        code = """Rating(value = rating, onValueChange = { rating = it })""",
+    ) {
+        var rating by remember { mutableIntStateOf(3) }
+        Rating(value = rating, onValueChange = { rating = it })
+    }
+
+    ShowcaseSection("Form & Selection")
+
+    ComponentShowcase(
+        name = "Form",
+        description = "Structured form layout with labeled fields, validation helpers, and required markers.",
+        code = """Form {
+    FormField(label = "Email", required = true, helper = "We'll never share your email") {
+        TextField(value = email, onValueChange = { email = it }, placeholder = "you@example.com")
+    }
+}""",
+    ) {
+        Form {
+            FormField(label = "Email", required = true, helper = "We'll never share your email") {
+                var email by remember { mutableStateOf("") }
+                TextField(value = email, onValueChange = { email = it }, placeholder = "you@example.com")
+            }
+            FormField(label = "Password", required = true) {
+                var pw by remember { mutableStateOf("") }
+                TextField(value = pw, onValueChange = { pw = it }, placeholder = "••••••••")
+            }
         }
     }
 
-    SectionTitle("Choice Group")
-    var selected by remember { mutableStateOf(setOf("a")) }
-    ChoiceGroup(
-        items = listOf(
-            ChoiceItem("a", "Free Plan", "Basic features, 1 project"),
-            ChoiceItem("b", "Pro Plan", "All features, unlimited projects"),
-            ChoiceItem("c", "Enterprise", "Custom solutions, dedicated support"),
-        ),
-        selectedIds = selected,
-        onSelectionChange = { selected = it },
-    )
+    ComponentShowcase(
+        name = "ChoiceGroup",
+        description = "Rich selection cards for choosing between plans, options, or configurations.",
+        code = """ChoiceGroup(
+    items = listOf(ChoiceItem("a", "Free", "Basic features")),
+    selectedIds = selected,
+    onSelectionChange = { selected = it },
+)""",
+    ) {
+        var selected by remember { mutableStateOf(setOf("a")) }
+        ChoiceGroup(
+            items = listOf(
+                ChoiceItem("a", "Free Plan", "Basic features, 1 project"),
+                ChoiceItem("b", "Pro Plan", "All features, unlimited projects"),
+                ChoiceItem("c", "Enterprise", "Custom solutions, dedicated support"),
+            ),
+            selectedIds = selected,
+            onSelectionChange = { selected = it },
+        )
+    }
 
-    SectionTitle("Color Picker")
-    val defaultColor = Gort.colors.primary
-    var pickedColor by remember { mutableStateOf(defaultColor) }
-    ColorPicker(
-        colors = listOf(
-            Gort.colors.primary, Gort.colors.secondary, Gort.colors.tertiary,
-            Gort.colors.accent, Gort.colors.error, Gort.colors.success,
-            Gort.colors.warning, Gort.colors.surface, Gort.colors.background,
-        ),
-        selectedColor = pickedColor,
-        onColorSelect = { pickedColor = it },
-    )
+    ComponentShowcase(
+        name = "ColorPicker",
+        description = "Palette-based color selector for picking from a predefined set of colors.",
+        code = """ColorPicker(
+    colors = listOf(Gort.colors.primary, Gort.colors.secondary),
+    selectedColor = pickedColor,
+    onColorSelect = { pickedColor = it },
+)""",
+    ) {
+        val defaultColor = Gort.colors.primary
+        var pickedColor by remember { mutableStateOf(defaultColor) }
+        ColorPicker(
+            colors = listOf(
+                Gort.colors.primary, Gort.colors.secondary, Gort.colors.tertiary,
+                Gort.colors.accent, Gort.colors.error, Gort.colors.success,
+                Gort.colors.warning, Gort.colors.surface, Gort.colors.background,
+            ),
+            selectedColor = pickedColor,
+            onColorSelect = { pickedColor = it },
+        )
+    }
 }

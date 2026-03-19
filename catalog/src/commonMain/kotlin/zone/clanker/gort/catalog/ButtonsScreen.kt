@@ -9,58 +9,95 @@ import zone.clanker.gort.theme.Gort
 
 @Composable
 fun ButtonsScreen() {
-    SectionTitle("Buttons")
+    ShowcaseSection("Buttons")
 
-    ComponentLabel("Primary")
-    Button(onClick = {}) {
-        BasicText("Primary Button", style = Gort.typography.label.copy(color = Gort.colors.onPrimary))
-    }
+    var variant by remember { mutableStateOf(ButtonVariant.Primary) }
 
-    ComponentLabel("Secondary")
-    Button(onClick = {}, variant = ButtonVariant.Secondary) {
-        BasicText("Secondary", style = Gort.typography.label.copy(color = Gort.colors.onSecondary))
-    }
-
-    ComponentLabel("Outline")
-    Button(onClick = {}, variant = ButtonVariant.Outline) {
-        BasicText("Outline", style = Gort.typography.label.copy(color = Gort.colors.onSurface))
-    }
-
-    ComponentLabel("Danger")
-    Button(onClick = {}, variant = ButtonVariant.Danger) {
-        BasicText("Danger", style = Gort.typography.label.copy(color = Gort.colors.onError))
-    }
-
-    ComponentLabel("Disabled")
-    Button(onClick = {}, enabled = false) {
-        BasicText("Disabled", style = Gort.typography.label.copy(color = Gort.colors.onSurface))
-    }
-
-    SectionTitle("Icon Button")
-    Row(horizontalArrangement = Arrangement.spacedBy(Gort.spacing.sm)) {
-        IconButton(onClick = {}) {
-            BasicText("✏️", style = Gort.typography.body)
-        }
-        IconButton(onClick = {}) {
-            BasicText("🗑️", style = Gort.typography.body)
-        }
-        IconButton(onClick = {}) {
-            BasicText("⭐", style = Gort.typography.body)
+    ComponentShowcase(
+        name = "Button",
+        description = "Primary action trigger with neobrutalist shadow. Supports primary, secondary, outline, and danger variants.",
+        code = """Button(onClick = {}, variant = ButtonVariant.${variant.name}) {
+    BasicText("Click Me")
+}""",
+        controls = {
+            var segIdx by remember { mutableIntStateOf(0) }
+            SegmentedControl(
+                options = listOf("Primary", "Secondary", "Outline", "Danger"),
+                selectedIndex = segIdx,
+                onSelect = {
+                    segIdx = it
+                    variant = ButtonVariant.entries[it]
+                },
+            )
+        },
+    ) {
+        Button(onClick = {}, variant = variant) {
+            val textColor = when (variant) {
+                ButtonVariant.Primary -> Gort.colors.onPrimary
+                ButtonVariant.Secondary -> Gort.colors.onSecondary
+                ButtonVariant.Outline -> Gort.colors.onSurface
+                ButtonVariant.Danger -> Gort.colors.onError
+            }
+            BasicText("Click Me", style = Gort.typography.label.copy(color = textColor))
         }
     }
 
-    SectionTitle("Segmented Control")
-    var segmentIndex by remember { mutableIntStateOf(0) }
-    SegmentedControl(
-        options = listOf("Day", "Week", "Month", "Year"),
-        selectedIndex = segmentIndex,
-        onSelect = { segmentIndex = it },
-    )
+    ComponentShowcase(
+        name = "Button (Disabled)",
+        description = "Disabled buttons are visually muted and non-interactive.",
+        code = """Button(onClick = {}, enabled = false) {
+    BasicText("Disabled")
+}""",
+    ) {
+        Button(onClick = {}, enabled = false) {
+            BasicText("Disabled", style = Gort.typography.label.copy(color = Gort.colors.onSurface))
+        }
+    }
 
-    SectionTitle("Chip")
-    Row(horizontalArrangement = Arrangement.spacedBy(Gort.spacing.sm)) {
-        Chip(label = "Kotlin")
-        Chip(label = "Java")
-        Chip(label = "Scala")
+    ShowcaseSection("Icon Buttons")
+
+    ComponentShowcase(
+        name = "IconButton",
+        description = "Compact icon-only button for toolbar actions and inline controls.",
+        code = """IconButton(onClick = {}) {
+    BasicText("✏️")
+}""",
+    ) {
+        Row(horizontalArrangement = Arrangement.spacedBy(Gort.spacing.sm)) {
+            IconButton(onClick = {}) { BasicText("✏️", style = Gort.typography.body) }
+            IconButton(onClick = {}) { BasicText("🗑️", style = Gort.typography.body) }
+            IconButton(onClick = {}) { BasicText("⭐", style = Gort.typography.body) }
+        }
+    }
+
+    ShowcaseSection("Selection Controls")
+
+    ComponentShowcase(
+        name = "SegmentedControl",
+        description = "Mutually exclusive option selector for switching between related views or modes.",
+        code = """SegmentedControl(
+    options = listOf("Day", "Week", "Month"),
+    selectedIndex = selected,
+    onSelect = { selected = it },
+)""",
+    ) {
+        var segmentIndex by remember { mutableIntStateOf(0) }
+        SegmentedControl(
+            options = listOf("Day", "Week", "Month", "Year"),
+            selectedIndex = segmentIndex,
+            onSelect = { segmentIndex = it },
+        )
+    }
+
+    ComponentShowcase(
+        name = "Chip",
+        description = "Compact labels for tags, filters, or categories.",
+        code = """Chip(label = "Kotlin")""",
+    ) {
+        Row(horizontalArrangement = Arrangement.spacedBy(Gort.spacing.sm)) {
+            Chip(label = "Kotlin")
+            Chip(label = "Java")
+            Chip(label = "Scala")
+        }
     }
 }
