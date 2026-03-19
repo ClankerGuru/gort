@@ -1,9 +1,13 @@
 package zone.clanker.gort.catalog
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.unit.dp
+import com.composables.icons.lucide.*
 import zone.clanker.gort.components.*
 import zone.clanker.gort.theme.Gort
 
@@ -161,5 +165,77 @@ fun NavigationScreen() {
             onSelect = { paletteVisible = false },
             onDismiss = { paletteVisible = false },
         )
+    }
+
+    ShowcaseSection("Bottom Navigation")
+
+    ComponentShowcase(
+        name = "GortBottomBar",
+        description = "Neobrutalist bottom navigation bar with thick top border and flat background.",
+        code = """GortBottomBar {
+    GortBottomBarItem(selected = true, onClick = {}, icon = { … }, label = { … })
+}""",
+    ) {
+        var selected by remember { mutableIntStateOf(0) }
+        val items = listOf("Edit" to Lucide.Pencil, "Star" to Lucide.Star, "Trash" to Lucide.Trash2)
+        GortBottomBar {
+            items.forEachIndexed { index, (label, icon) ->
+                GortBottomBarItem(
+                    selected = selected == index,
+                    onClick = { selected = index },
+                    icon = {
+                        Image(
+                            icon,
+                            contentDescription = label,
+                            colorFilter = ColorFilter.tint(LocalGortBottomBarItemColor.current),
+                            modifier = Modifier.size(20.dp),
+                        )
+                    },
+                    label = {
+                        BasicText(
+                            label,
+                            style = Gort.typography.label.copy(color = LocalGortBottomBarItemColor.current),
+                        )
+                    },
+                )
+            }
+        }
+    }
+
+    ComponentShowcase(
+        name = "GortBottomSheet",
+        description = "Modal bottom sheet with spring animation, drag handle, and hard shadow.",
+        code = """GortBottomSheet(isVisible = visible, onDismiss = { visible = false }) {
+    BasicText("Sheet content")
+}""",
+    ) {
+        var sheetVisible by remember { mutableStateOf(false) }
+        Button(onClick = { sheetVisible = true }) {
+            BasicText("Open Bottom Sheet", style = Gort.typography.label.copy(color = Gort.colors.onPrimary))
+        }
+        GortBottomSheet(isVisible = sheetVisible, onDismiss = { sheetVisible = false }) {
+            BasicText("Hello from the bottom sheet!", style = Gort.typography.body.copy(color = Gort.colors.onSurface))
+            Spacer(modifier = Modifier.height(Gort.spacing.md))
+            Button(onClick = { sheetVisible = false }) {
+                BasicText("Close", style = Gort.typography.label.copy(color = Gort.colors.onPrimary))
+            }
+        }
+    }
+
+    ComponentShowcase(
+        name = "GortFab",
+        description = "Square floating action button with hard offset shadow and press animation.",
+        code = """GortFab(onClick = { }) {
+    Image(Lucide.Plus, contentDescription = "Add", …)
+}""",
+    ) {
+        GortFab(onClick = {}) {
+            Image(
+                Lucide.Plus,
+                contentDescription = "Add",
+                colorFilter = ColorFilter.tint(Gort.colors.onPrimary),
+                modifier = Modifier.size(24.dp),
+            )
+        }
     }
 }

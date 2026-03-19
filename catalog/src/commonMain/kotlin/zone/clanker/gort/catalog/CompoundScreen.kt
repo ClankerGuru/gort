@@ -1,5 +1,7 @@
 package zone.clanker.gort.catalog
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.*
@@ -89,5 +91,53 @@ fun CompoundScreen() {
                 )
             }
         }
+    }
+
+    ShowcaseSection("Layout")
+
+    ComponentShowcase(
+        name = "GortListDetail",
+        description = "Adaptive list-detail layout. Side-by-side on wide screens, single pane on compact.",
+        code = """GortListDetail(
+    listContent = { /* list */ },
+    detailContent = { /* detail */ },
+    showDetail = showDetail,
+)""",
+    ) {
+        var selectedItem by remember { mutableStateOf("Kotlin") }
+        val items = listOf("Kotlin", "Compose", "Gort", "Neobrutalism")
+        GortListDetail(
+            modifier = Modifier.fillMaxWidth().height(200.dp),
+            showDetail = true,
+            listContent = {
+                Column(modifier = Modifier.padding(Gort.spacing.sm)) {
+                    items.forEach { item ->
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { selectedItem = item }
+                                .background(
+                                    if (item == selectedItem) Gort.colors.primaryContainer
+                                    else Gort.colors.surface,
+                                )
+                                .padding(Gort.spacing.sm),
+                        ) {
+                            BasicText(
+                                item,
+                                style = Gort.typography.body.copy(color = Gort.colors.onSurface),
+                            )
+                        }
+                    }
+                }
+            },
+            detailContent = {
+                Box(modifier = Modifier.padding(Gort.spacing.md)) {
+                    BasicText(
+                        "Selected: $selectedItem",
+                        style = Gort.typography.title.copy(color = Gort.colors.onSurface),
+                    )
+                }
+            },
+        )
     }
 }
