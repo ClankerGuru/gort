@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Thick black square border (neobrutalist) -->
+    <path
+        android:fillColor="#1A1A1A"
+        android:pathData="M24,24h60v60H24z"/>
+    <!-- Inner cream fill -->
+    <path
+        android:fillColor="#F5F0E8"
+        android:pathData="M28,28h52v52H28z"/>
+
+    <!-- Bold "G" letterform -->
+    <path
+        android:fillColor="#1A1A1A"
+        android:pathData="M42,42 L62,42 L62,47 L47,47 L47,57 L62,57 L62,52 L55,52 L55,47 L67,47 L67,62 L42,62 Z"/>
+
+    <!-- Pink accent dot (bottom-right of the G) -->
+    <path
+        android:fillColor="#FF5470"
+        android:pathData="M63,58 h5 v5 h-5 z"/>
+
+    <!-- Hard offset shadow (bottom-right) -->
+    <path
+        android:fillColor="#1A1A1A"
+        android:pathData="M28,80 L84,80 L84,28 L88,28 L88,84 L28,84 Z"
+        android:fillAlpha="0.3"/>
+</vector>

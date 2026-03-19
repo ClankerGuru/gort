@@ -223,6 +223,28 @@ fun NavigationScreen() {
     }
 
     ComponentShowcase(
+        name = "SideSheet",
+        description = "Detail panel sliding in from the right edge — ideal for properties, filters, or inspector panels.",
+        code = """GortSideSheet(isVisible = isOpen, onDismiss = { isOpen = false }) {
+    BasicText("Sheet content")
+}""",
+    ) {
+        var isOpen by remember { mutableStateOf(false) }
+        Button(onClick = { isOpen = !isOpen }) {
+            BasicText("Toggle Side Sheet", style = Gort.typography.label.copy(color = Gort.colors.onPrimary))
+        }
+        GortSideSheet(isVisible = isOpen, onDismiss = { isOpen = false }) {
+            BasicText("Side Sheet Panel", style = Gort.typography.title.copy(color = Gort.colors.onSurface))
+            Spacer(modifier = Modifier.height(Gort.spacing.md))
+            BasicText("Use this for properties, filters, or detail inspectors.", style = Gort.typography.body.copy(color = Gort.colors.onSurface))
+            Spacer(modifier = Modifier.height(Gort.spacing.md))
+            Button(onClick = { isOpen = false }) {
+                BasicText("Close", style = Gort.typography.label.copy(color = Gort.colors.onPrimary))
+            }
+        }
+    }
+
+    ComponentShowcase(
         name = "GortFab",
         description = "Square floating action button with hard offset shadow and press animation.",
         code = """GortFab(onClick = { }) {
