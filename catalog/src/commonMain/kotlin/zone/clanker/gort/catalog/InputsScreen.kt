@@ -3,11 +3,38 @@ package zone.clanker.gort.catalog
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import zone.clanker.gort.components.*
 import zone.clanker.gort.theme.Gort
 
 @Composable
 fun InputsScreen() {
+    ShowcaseSection("Search")
+
+    ComponentShowcase(
+        name = "SearchBar",
+        description = "Full-width search input with icon, clear button, and optional filter chips.",
+        code = """GortSearchBar(
+    query = query,
+    onQueryChange = { query = it },
+    placeholder = "Search...",
+    filters = listOf("All", "Unread", "Favorites"),
+    selectedFilter = selected,
+    onFilterSelect = { selected = it },
+)""",
+    ) {
+        var q by remember { mutableStateOf("") }
+        var f by remember { mutableIntStateOf(0) }
+        GortSearchBar(
+            query = q,
+            onQueryChange = { q = it },
+            placeholder = "Search components...",
+            filters = listOf("All", "Unread", "Favorites", "Groups"),
+            selectedFilter = f,
+            onFilterSelect = { f = it },
+        )
+    }
+
     ShowcaseSection("Text Inputs")
 
     ComponentShowcase(
