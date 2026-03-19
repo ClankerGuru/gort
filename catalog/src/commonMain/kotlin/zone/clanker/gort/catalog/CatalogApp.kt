@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.composables.icons.lucide.*
 import zone.clanker.gort.components.GortDivider
+import zone.clanker.gort.components.GortScaffold
 import zone.clanker.gort.foundation.WindowSize
 import zone.clanker.gort.foundation.currentWindowSize
 import zone.clanker.gort.theme.Gort
@@ -44,61 +45,63 @@ fun CatalogApp() {
     var currentTypography by remember { mutableStateOf(GortTypography()) }
 
     GortTheme(colors = currentColors, typography = currentTypography) {
-        BoxWithConstraints(
-            modifier = Modifier.fillMaxSize().background(Gort.colors.background),
-        ) {
-            val windowSize = currentWindowSize()
+        GortScaffold { _ ->
+            BoxWithConstraints(
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                val windowSize = currentWindowSize()
 
-            Column(modifier = Modifier.fillMaxSize()) {
-                // Masthead
-                Masthead(isDark = isDark, onToggleDark = {
-                    isDark = !isDark
-                    currentColors = if (isDark) GortColors.dark() else GortColors.light()
-                })
+                Column(modifier = Modifier.fillMaxSize()) {
+                    // Masthead
+                    Masthead(isDark = isDark, onToggleDark = {
+                        isDark = !isDark
+                        currentColors = if (isDark) GortColors.dark() else GortColors.light()
+                    })
 
-                // Content area
-                when (windowSize) {
-                    WindowSize.Expanded -> {
-                        Row(modifier = Modifier.fillMaxSize()) {
-                            // Nav rail
-                            NavRail(
+                    // Content area
+                    when (windowSize) {
+                        WindowSize.Expanded -> {
+                            Row(modifier = Modifier.fillMaxSize()) {
+                                // Nav rail
+                                NavRail(
+                                    currentSection = currentSection,
+                                    onSelect = { currentSection = it },
+                                )
+                                // Column rule
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxHeight()
+                                        .width(1.dp)
+                                        .background(Gort.colors.border.copy(alpha = 0.3f)),
+                                )
+                                // Content
+                                CatalogContent(
+                                    section = currentSection,
+                                    isDark = isDark,
+                                    onColorsChange = { currentColors = it },
+                                    onTypographyChange = { currentTypography = it },
+                                    modifier = Modifier.weight(1f),
+                                )
+                            }
+                        }
+                        else -> {
+                            // Compact & Medium: content + bottom nav
+                            Box(modifier = Modifier.weight(1f)) {
+                                CatalogContent(
+                                    section = currentSection,
+                                    isDark = isDark,
+                                    onColorsChange = { currentColors = it },
+                                    onTypographyChange = { currentTypography = it },
+                                    modifier = Modifier.fillMaxSize(),
+                                )
+                            }
+                            GortDivider()
+                            BottomNavBar(
                                 currentSection = currentSection,
                                 onSelect = { currentSection = it },
-                            )
-                            // Column rule
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .width(1.dp)
-                                    .background(Gort.colors.border.copy(alpha = 0.3f)),
-                            )
-                            // Content
-                            CatalogContent(
-                                section = currentSection,
-                                isDark = isDark,
-                                onColorsChange = { currentColors = it },
-                                onTypographyChange = { currentTypography = it },
-                                modifier = Modifier.weight(1f),
+                                showLabels = windowSize == WindowSize.Medium,
                             )
                         }
-                    }
-                    else -> {
-                        // Compact & Medium: content + bottom nav
-                        Box(modifier = Modifier.weight(1f)) {
-                            CatalogContent(
-                                section = currentSection,
-                                isDark = isDark,
-                                onColorsChange = { currentColors = it },
-                                onTypographyChange = { currentTypography = it },
-                                modifier = Modifier.fillMaxSize(),
-                            )
-                        }
-                        GortDivider()
-                        BottomNavBar(
-                            currentSection = currentSection,
-                            onSelect = { currentSection = it },
-                            showLabels = windowSize == WindowSize.Medium,
-                        )
                     }
                 }
             }

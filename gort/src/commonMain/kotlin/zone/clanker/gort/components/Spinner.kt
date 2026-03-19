@@ -33,23 +33,15 @@ fun Spinner(
 
     Canvas(modifier = modifier.size(size)) {
         val stroke = Stroke(width = strokeWidth.toPx(), cap = StrokeCap.Square)
-        // Background track
         drawArc(
             color = color.copy(alpha = 0.2f),
-            startAngle = 0f,
-            sweepAngle = 360f,
-            useCenter = false,
-            style = stroke,
+            startAngle = 0f, sweepAngle = 360f, useCenter = false, style = stroke,
             topLeft = Offset(stroke.width / 2, stroke.width / 2),
             size = Size(this.size.width - stroke.width, this.size.height - stroke.width),
         )
-        // Spinning arc — thick, blocky (Square cap = neobrutalist)
         drawArc(
             color = color,
-            startAngle = rotation,
-            sweepAngle = 90f,
-            useCenter = false,
-            style = stroke,
+            startAngle = rotation, sweepAngle = 90f, useCenter = false, style = stroke,
             topLeft = Offset(stroke.width / 2, stroke.width / 2),
             size = Size(this.size.width - stroke.width, this.size.height - stroke.width),
         )
