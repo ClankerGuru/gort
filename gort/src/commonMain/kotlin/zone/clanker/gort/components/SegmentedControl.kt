@@ -8,6 +8,11 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,16 +32,28 @@ fun SegmentedControl(
 ) {
     val colors = Gort.colors
     val shape = Gort.corners.default
+    val borderWidth = Gort.borders.default
 
     Row(
         modifier = modifier
-            .border(Gort.borders.default, colors.border, shape)
+            .height(IntrinsicSize.Min)
+            .border(borderWidth, colors.border, shape)
             .clip(shape),
     ) {
         options.forEachIndexed { index, label ->
             val isSelected = index == selectedIndex
             val interactionSource = remember { MutableInteractionSource() }
             val isHovered by interactionSource.collectIsHoveredAsState()
+
+            if (index > 0) {
+                // Single shared border between segments instead of double borders
+                Box(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .width(borderWidth)
+                        .background(colors.border),
+                )
+            }
 
             BasicText(
                 text = label,
@@ -54,15 +71,7 @@ fun SegmentedControl(
                             else -> colors.surface
                         },
                     )
-                    .padding(horizontal = Gort.spacing.md, vertical = Gort.spacing.sm)
-                    .then(
-                        if (index < options.lastIndex)
-                            Modifier.border(
-                                width = Gort.borders.thin,
-                                color = colors.border,
-                            )
-                        else Modifier
-                    ),
+                    .padding(horizontal = Gort.spacing.md, vertical = Gort.spacing.sm),
             )
         }
     }

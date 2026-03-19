@@ -3,6 +3,7 @@ package zone.clanker.gort.components
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,8 +20,12 @@ fun Card(
     shape: Shape = Gort.corners.default,
     content: @Composable BoxScope.() -> Unit,
 ) {
+    // Padding for shadow overflow to prevent clipping
     Surface(
-        modifier = modifier,
+        modifier = modifier.padding(
+            end = shadow.offsetX.coerceAtLeast(0.dp),
+            bottom = shadow.offsetY.coerceAtLeast(0.dp),
+        ),
         color = color,
         shadow = shadow,
         shape = shape,
