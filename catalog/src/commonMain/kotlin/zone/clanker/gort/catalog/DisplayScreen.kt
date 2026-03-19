@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import zone.clanker.gort.components.*
 import zone.clanker.gort.theme.Gort
 
@@ -162,6 +163,18 @@ fun DisplayScreen() {
     }
 
     ShowcaseSection("Loading & Progress")
+
+    ComponentShowcase(
+        name = "Spinner",
+        description = "Animated loading indicator with thick neobrutalist stroke.",
+        code = """Spinner(color = Gort.colors.primary, size = 32.dp)""",
+    ) {
+        Row(horizontalArrangement = Arrangement.spacedBy(Gort.spacing.md)) {
+            Spinner(size = 24.dp)
+            Spinner(size = 32.dp, color = Gort.colors.secondary)
+            Spinner(size = 48.dp, color = Gort.colors.tertiary, strokeWidth = 4.dp)
+        }
+    }
 
     ComponentShowcase(
         name = "Skeleton",
