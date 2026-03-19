@@ -99,6 +99,7 @@ fun GortSearchBar(
                         contentColor = if (index == selectedFilter) Gort.colors.onPrimary else Gort.colors.onPrimaryContainer,
                         modifier = Modifier.clickable { onFilterSelect(index) },
                     )
+                    // Chip doesn't have onClick — clickable is on modifier
                 }
             }
         }
