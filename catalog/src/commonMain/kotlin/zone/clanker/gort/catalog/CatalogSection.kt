@@ -13,4 +13,5 @@ enum class CatalogSection(val label: String, val icon: ImageVector) {
     Compound("Compound", Lucide.Puzzle),
     Data("Data", Lucide.Database),
     Chat("Chat", Lucide.MessageCircle),
+    Markdown("Markdown", Lucide.FileText),
 }

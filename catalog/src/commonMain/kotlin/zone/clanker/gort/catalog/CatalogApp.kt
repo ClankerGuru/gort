@@ -31,6 +31,8 @@ fun CatalogApp() {
     var currentColors by remember { mutableStateOf(GortColors.light()) }
     var currentTypography by remember { mutableStateOf(GortTypography()) }
 
+    val isChatFullscreen = currentSection == CatalogSection.Chat
+
     GortTheme(colors = currentColors, typography = currentTypography) {
         GortScaffold { _ ->
             BoxWithConstraints(
@@ -38,56 +40,64 @@ fun CatalogApp() {
             ) {
                 val windowSize = currentWindowSize()
 
-                Column(modifier = Modifier.fillMaxSize()) {
-                    // Masthead
-                    Masthead(isDark = isDark, onToggleDark = {
-                        isDark = !isDark
-                        currentColors = if (isDark) GortColors.dark() else GortColors.light()
-                    })
+                if (isChatFullscreen) {
+                    // Chat gets fullscreen — no masthead, no bottom nav
+                    CatalogContent(
+                        section = currentSection,
+                        isDark = isDark,
+                        onColorsChange = { currentColors = it },
+                        onTypographyChange = { currentTypography = it },
+                        onBack = { currentSection = CatalogSection.Buttons },
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                } else {
+                    Column(modifier = Modifier.fillMaxSize()) {
+                        // Masthead
+                        Masthead(isDark = isDark, onToggleDark = {
+                            isDark = !isDark
+                            currentColors = if (isDark) GortColors.dark() else GortColors.light()
+                        })
 
-                    // Content area
-                    when (windowSize) {
-                        WindowSize.Expanded -> {
-                            Row(modifier = Modifier.fillMaxSize()) {
-                                // Nav rail
-                                NavRail(
+                        // Content area
+                        when (windowSize) {
+                            WindowSize.Expanded -> {
+                                Row(modifier = Modifier.fillMaxSize()) {
+                                    NavRail(
+                                        currentSection = currentSection,
+                                        onSelect = { currentSection = it },
+                                    )
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxHeight()
+                                            .width(1.dp)
+                                            .background(Gort.colors.border.copy(alpha = 0.3f)),
+                                    )
+                                    CatalogContent(
+                                        section = currentSection,
+                                        isDark = isDark,
+                                        onColorsChange = { currentColors = it },
+                                        onTypographyChange = { currentTypography = it },
+                                        modifier = Modifier.weight(1f),
+                                    )
+                                }
+                            }
+                            else -> {
+                                Box(modifier = Modifier.weight(1f)) {
+                                    CatalogContent(
+                                        section = currentSection,
+                                        isDark = isDark,
+                                        onColorsChange = { currentColors = it },
+                                        onTypographyChange = { currentTypography = it },
+                                        modifier = Modifier.fillMaxSize(),
+                                    )
+                                }
+                                GortDivider()
+                                BottomNavBar(
                                     currentSection = currentSection,
                                     onSelect = { currentSection = it },
-                                )
-                                // Column rule
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxHeight()
-                                        .width(1.dp)
-                                        .background(Gort.colors.border.copy(alpha = 0.3f)),
-                                )
-                                // Content
-                                CatalogContent(
-                                    section = currentSection,
-                                    isDark = isDark,
-                                    onColorsChange = { currentColors = it },
-                                    onTypographyChange = { currentTypography = it },
-                                    modifier = Modifier.weight(1f),
+                                    showLabels = windowSize == WindowSize.Medium,
                                 )
                             }
-                        }
-                        else -> {
-                            // Compact & Medium: content + bottom nav
-                            Box(modifier = Modifier.weight(1f)) {
-                                CatalogContent(
-                                    section = currentSection,
-                                    isDark = isDark,
-                                    onColorsChange = { currentColors = it },
-                                    onTypographyChange = { currentTypography = it },
-                                    modifier = Modifier.fillMaxSize(),
-                                )
-                            }
-                            GortDivider()
-                            BottomNavBar(
-                                currentSection = currentSection,
-                                onSelect = { currentSection = it },
-                                showLabels = windowSize == WindowSize.Medium,
-                            )
                         }
                     }
                 }
@@ -230,8 +240,15 @@ private fun CatalogContent(
     isDark: Boolean = false,
     onColorsChange: (GortColors) -> Unit = {},
     onTypographyChange: (GortTypography) -> Unit = {},
+    onBack: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
+    // Chat gets its own layout (no scroll wrapper)
+    if (section == CatalogSection.Chat) {
+        ChatScreen(onBack = onBack)
+        return
+    }
+
     Box(
         modifier = modifier,
         contentAlignment = Alignment.TopCenter,
@@ -257,7 +274,8 @@ private fun CatalogContent(
                 CatalogSection.Feedback -> FeedbackScreen()
                 CatalogSection.Compound -> CompoundScreen()
                 CatalogSection.Data -> DataScreen()
-                CatalogSection.Chat -> ChatScreen()
+                CatalogSection.Chat -> {} // handled above
+                CatalogSection.Markdown -> MarkdownScreen()
             }
         }
     }
