@@ -3,7 +3,9 @@ package zone.clanker.gort.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,9 +16,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import zone.clanker.gort.theme.Gort
@@ -48,6 +53,8 @@ fun GortNavigationRail(
             items.forEachIndexed { index, item ->
                 val selected = index == selectedIndex
                 val shape = Gort.corners.small
+                val interactionSource = remember { MutableInteractionSource() }
+                val isHovered by interactionSource.collectIsHoveredAsState()
 
                 Box(
                     modifier = Modifier
@@ -55,15 +62,21 @@ fun GortNavigationRail(
                         .padding(horizontal = Gort.spacing.sm)
                         .clip(shape)
                         .background(
-                            if (selected) colors.primaryContainer else colors.surface,
+                            when {
+                                selected -> colors.primaryContainer
+                                isHovered -> colors.primaryContainer.copy(alpha = 0.3f)
+                                else -> colors.surface
+                            },
                             shape,
                         )
                         .then(
                             if (selected) Modifier.border(Gort.borders.normal, colors.border, shape)
                             else Modifier
                         )
+                        .hoverable(interactionSource)
+                        .pointerHoverIcon(PointerIcon.Hand)
                         .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
+                            interactionSource = interactionSource,
                             indication = null,
                         ) { onItemSelected(index) }
                         .padding(horizontal = Gort.spacing.md, vertical = Gort.spacing.sm),
@@ -77,7 +90,6 @@ fun GortNavigationRail(
                 }
             }
         }
-        // Right border
         GortDivider(vertical = true, thickness = Gort.borders.heavy)
     }
 }

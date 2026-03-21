@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <!-- Neobrutalist Gort icon — thick strokes, flat shapes, bold lines -->
+  
+  <!-- Background -->
+  <rect width="256" height="256" fill="#FFFFFF" stroke="#000000" stroke-width="4"/>
+  
+  <!-- Neck -->
+  <path d="M96 195 L96 240 L160 240 L160 195" fill="#D4D4D4" stroke="#000000" stroke-width="4" stroke-linejoin="miter"/>
+  
+  <!-- Shoulder hints -->
+  <path d="M60 240 L96 210 L96 240 Z" fill="#B0B0B0" stroke="#000000" stroke-width="4" stroke-linejoin="miter"/>
+  <path d="M196 240 L160 210 L160 240 Z" fill="#B0B0B0" stroke="#000000" stroke-width="4" stroke-linejoin="miter"/>
+  
+  <!-- Head - smooth dome shape -->
+  <path d="M72 195 L72 120 Q72 40 128 40 Q184 40 184 120 L184 195 Z" fill="#C8C8C8" stroke="#000000" stroke-width="4" stroke-linejoin="miter"/>
+  
+  <!-- Visor slit - the iconic single eye band -->
+  <rect x="62" y="125" width="132" height="18" rx="2" fill="#000000"/>
+  
+  <!-- Visor glow -->
+  <rect x="66" y="129" width="124" height="10" rx="1" fill="#1a1a1a"/>
+  <line x1="80" y1="134" x2="176" y2="134" stroke="#FFFFFF" stroke-width="2" opacity="0.4"/>
+  
+  <!-- Laser beam from visor -->
+  <line x1="62" y1="134" x2="20" y2="110" stroke="#000000" stroke-width="3"/>
+  <line x1="62" y1="134" x2="16" y2="106" stroke="#000000" stroke-width="2"/>
+  
+  <!-- Head seam lines - brutalist details -->
+  <line x1="128" y1="42" x2="128" y2="125" stroke="#000000" stroke-width="2" opacity="0.3"/>
+  <line x1="128" y1="143" x2="128" y2="195" stroke="#000000" stroke-width="2" opacity="0.3"/>
+  
+  <!-- Ear/temple details -->
+  <circle cx="184" cy="134" r="10" fill="#A0A0A0" stroke="#000000" stroke-width="3"/>
+  <circle cx="184" cy="134" r="4" fill="#000000"/>
+  
+  <!-- Chin line -->
+  <line x1="88" y1="180" x2="168" y2="180" stroke="#000000" stroke-width="2" opacity="0.4"/>
+</svg>

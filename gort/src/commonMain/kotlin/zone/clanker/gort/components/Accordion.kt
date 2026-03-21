@@ -4,11 +4,18 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.hoverable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import zone.clanker.gort.foundation.Surface
 import zone.clanker.gort.theme.Gort
 
@@ -22,6 +29,8 @@ fun Accordion(
     var expanded by remember { mutableStateOf(initialExpanded) }
     val colors = Gort.colors
     val spacing = Gort.spacing
+    val headerInteraction = remember { MutableInteractionSource() }
+    val isHeaderHovered by headerInteraction.collectIsHoveredAsState()
 
     Surface(
         modifier = modifier.fillMaxWidth(),
@@ -32,7 +41,13 @@ fun Accordion(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .hoverable(headerInteraction)
+                    .pointerHoverIcon(PointerIcon.Hand)
                     .clickable { expanded = !expanded }
+                    .background(
+                        if (isHeaderHovered) colors.primaryContainer.copy(alpha = 0.2f)
+                        else Color.Transparent,
+                    )
                     .padding(spacing.md),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
