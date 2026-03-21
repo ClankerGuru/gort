@@ -11,11 +11,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.composables.icons.lucide.*
+import zone.clanker.gort.icons.lucide.*
 import zone.clanker.gort.components.GortDivider
 import zone.clanker.gort.components.GortScaffold
 import zone.clanker.gort.foundation.WindowSize
@@ -24,18 +23,6 @@ import zone.clanker.gort.theme.Gort
 import zone.clanker.gort.theme.GortColors
 import zone.clanker.gort.theme.GortTheme
 import zone.clanker.gort.theme.GortTypography
-
-enum class CatalogSection(val label: String, val icon: ImageVector) {
-    Theme("Theme", Lucide.Palette),
-    Buttons("Actions", Lucide.MousePointerClick),
-    Inputs("Inputs", Lucide.TextCursorInput),
-    Display("Display", Lucide.ChartBar),
-    Navigation("Navigation", Lucide.Compass),
-    Feedback("Feedback", Lucide.MessageSquare),
-    Compound("Compound", Lucide.Puzzle),
-    Data("Data", Lucide.Database),
-    Chat("Chat", Lucide.MessageCircle),
-}
 
 @Composable
 fun CatalogApp() {

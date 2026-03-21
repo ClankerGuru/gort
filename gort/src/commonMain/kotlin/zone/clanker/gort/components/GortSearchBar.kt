@@ -21,9 +21,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.dp
-import com.composables.icons.lucide.Lucide
-import com.composables.icons.lucide.Search
-import com.composables.icons.lucide.X
+import zone.clanker.gort.icons.lucide.Lucide
+import zone.clanker.gort.icons.lucide.Search
+import zone.clanker.gort.icons.lucide.X
 import zone.clanker.gort.theme.Gort
 
 @Composable

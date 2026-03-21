@@ -8,7 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
-import com.composables.icons.lucide.*
+import zone.clanker.gort.icons.lucide.*
 import zone.clanker.gort.components.*
 import zone.clanker.gort.theme.Gort
 

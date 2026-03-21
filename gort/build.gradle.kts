@@ -16,20 +16,17 @@ kotlin {
     wasmJs { browser() }
     js { browser(); nodejs() }
 
-    // Apple targets with framework binaries
-    listOf(iosArm64(), iosSimulatorArm64(), macosArm64()).forEach {
-        it.binaries.framework {
-            baseName = "gort"
-            isStatic = true
-        }
-    }
+    // iOS + macOS native targets removed:
+    // - macOS: Lucide doesn't publish macOS native variants
+    // - iOS: needs macOS + Xcode to build frameworks
+    // Desktop = jvm("desktop") covers Windows/Linux/macOS via JVM.
 
     sourceSets {
         commonMain.dependencies {
             implementation(compose.foundation)
             implementation(compose.runtime)
             implementation(compose.ui)
-            api(libs.lucide)
+            api(libs.gortIcons)
             // NO Material 3 — this is intentional
         }
         commonTest.dependencies {
