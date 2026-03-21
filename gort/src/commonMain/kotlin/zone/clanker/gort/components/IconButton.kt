@@ -10,6 +10,7 @@ import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
@@ -33,7 +34,7 @@ fun IconButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     color: Color = Gort.colors.surface,
-    size: Dp = 40.dp,
+    size: Dp = 48.dp,
     shape: Shape = Gort.corners.default,
     content: @Composable () -> Unit,
 ) {
@@ -41,7 +42,7 @@ fun IconButton(
     val isPressed by interactionSource.collectIsPressedAsState()
     val isHovered by interactionSource.collectIsHoveredAsState()
     val isFocused by interactionSource.collectIsFocusedAsState()
-    val shadow = Gort.shadows.small
+    val shadow = Gort.shadows.medium
     val anim = Gort.animation
     val colors = Gort.colors
 
@@ -68,6 +69,7 @@ fun IconButton(
 
     Surface(
         modifier = modifier
+            .defaultMinSize(minWidth = 48.dp, minHeight = 48.dp)
             .size(size)
             .then(focusModifier)
             .hoverable(interactionSource)
@@ -79,6 +81,8 @@ fun IconButton(
                 onClick = onClick,
             ),
         color = color,
+        borderColor = colors.border,
+        shadowColor = colors.shadow,
         shadow = GortShadowSize(offsetX, offsetY),
         shape = shape,
     ) {

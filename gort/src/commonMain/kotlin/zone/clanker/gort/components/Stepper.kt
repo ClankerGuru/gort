@@ -3,6 +3,7 @@ package zone.clanker.gort.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,65 +25,86 @@ fun Stepper(
     val colors = Gort.colors
     val spacing = Gort.spacing
 
-    Row(
+    Column(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(spacing.xs),
-        verticalAlignment = Alignment.Top,
+        verticalArrangement = Arrangement.spacedBy(0.dp),
     ) {
         steps.forEachIndexed { index, step ->
             val isComplete = index < currentStep
             val isCurrent = index == currentStep
+            val isLast = index == steps.lastIndex
+
             val circleColor = when {
                 isComplete -> colors.success
                 isCurrent -> colors.primary
                 else -> colors.surface
             }
+            val circleContentColor = when {
+                isComplete -> colors.onSuccess
+                isCurrent -> colors.onPrimary
+                else -> colors.onSurface.copy(alpha = 0.4f)
+            }
             val textColor = when {
                 isComplete || isCurrent -> colors.onSurface
                 else -> colors.onSurface.copy(alpha = 0.4f)
             }
-
-            Column(
-                modifier = Modifier.weight(1f),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                // Step circle
-                Box(
-                    modifier = Modifier
-                        .size(32.dp)
-                        .border(Gort.borders.default, colors.border, Gort.corners.default)
-                        .background(circleColor, Gort.corners.default),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    BasicText(
-                        text = if (isComplete) "✓" else "${index + 1}",
-                        style = Gort.typography.label.copy(
-                            color = if (isComplete) colors.onSuccess else if (isCurrent) colors.onPrimary else colors.onSurface,
-                        ),
-                    )
-                }
-                Spacer(Modifier.height(spacing.xs))
-                BasicText(
-                    text = step.label,
-                    style = Gort.typography.label.copy(color = textColor),
-                )
-                if (step.description.isNotEmpty()) {
-                    BasicText(
-                        text = step.description,
-                        style = Gort.typography.body.copy(color = textColor.copy(alpha = 0.7f)),
-                    )
-                }
+            val connectorColor = when {
+                isComplete -> colors.success
+                else -> colors.border
             }
 
-            // Connector line
-            if (index < steps.lastIndex) {
-                Box(
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.Top,
+            ) {
+                // Left: circle + connector
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.width(40.dp),
+                ) {
+                    // Numbered circle
+                    Box(
+                        modifier = Modifier
+                            .size(32.dp)
+                            .border(Gort.borders.default, colors.border, CircleShape)
+                            .background(circleColor, CircleShape),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        BasicText(
+                            text = if (isComplete) "✓" else "${index + 1}",
+                            style = Gort.typography.label.copy(color = circleContentColor),
+                        )
+                    }
+
+                    // Connector line
+                    if (!isLast) {
+                        Box(
+                            modifier = Modifier
+                                .width(Gort.borders.default)
+                                .height(40.dp)
+                                .background(connectorColor),
+                        )
+                    }
+                }
+
+                // Right: title + description
+                Column(
                     modifier = Modifier
-                        .weight(0.5f)
-                        .height(Gort.borders.default)
-                        .background(if (isComplete) colors.success else colors.border)
-                        .align(Alignment.CenterVertically),
-                )
+                        .weight(1f)
+                        .padding(start = spacing.sm, top = spacing.xs),
+                ) {
+                    BasicText(
+                        text = step.label,
+                        style = Gort.typography.title.copy(color = textColor),
+                    )
+                    if (step.description.isNotEmpty()) {
+                        BasicText(
+                            text = step.description,
+                            style = Gort.typography.body.copy(color = textColor.copy(alpha = 0.7f)),
+                            modifier = Modifier.padding(top = 2.dp),
+                        )
+                    }
+                }
             }
         }
     }

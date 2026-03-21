@@ -1,5 +1,10 @@
 package zone.clanker.gort.components
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -14,8 +19,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.platform.LocalHapticFeedback
 import zone.clanker.gort.theme.Gort
 
 data class ChoiceItem(
@@ -36,6 +44,7 @@ fun ChoiceGroup(
     val colors = Gort.colors
     val spacing = Gort.spacing
     val shape = Gort.corners.default
+    val haptic = LocalHapticFeedback.current
 
     Column(
         modifier = modifier,
@@ -46,30 +55,45 @@ fun ChoiceGroup(
             val interactionSource = remember { MutableInteractionSource() }
             val isHovered by interactionSource.collectIsHoveredAsState()
 
+            // Animated properties
+            val borderWidth by animateDpAsState(
+                targetValue = if (isSelected) Gort.borders.thick else Gort.borders.default,
+                animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
+            )
+            val borderColor by animateColorAsState(
+                targetValue = when {
+                    isSelected -> colors.primary
+                    isHovered -> colors.primary.copy(alpha = 0.6f)
+                    else -> colors.border
+                },
+                animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
+            )
+            val bgColor by animateColorAsState(
+                targetValue = when {
+                    isSelected -> colors.primaryContainer
+                    isHovered -> colors.primaryContainer.copy(alpha = 0.2f)
+                    else -> colors.surface
+                },
+                animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
+            )
+            val checkScale by animateFloatAsState(
+                targetValue = if (isSelected) 1f else 0f,
+                animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                    stiffness = Spring.StiffnessMedium,
+                ),
+            )
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .border(
-                        if (isSelected) Gort.borders.thick else Gort.borders.default,
-                        when {
-                            isSelected -> colors.primary
-                            isHovered -> colors.primary.copy(alpha = 0.6f)
-                            else -> colors.border
-                        },
-                        shape,
-                    )
-                    .background(
-                        when {
-                            isSelected -> colors.primaryContainer
-                            isHovered -> colors.primaryContainer.copy(alpha = 0.2f)
-                            else -> colors.surface
-                        },
-                        shape,
-                    )
+                    .border(borderWidth, borderColor, shape)
+                    .background(bgColor, shape)
                     .clip(shape)
                     .hoverable(interactionSource)
                     .pointerHoverIcon(PointerIcon.Hand)
                     .clickable {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         val newSelection = if (multiSelect) {
                             if (isSelected) selectedIds - item.id else selectedIds + item.id
                         } else {
@@ -99,10 +123,15 @@ fun ChoiceGroup(
                         )
                     }
                 }
-                if (isSelected) {
+                // Animated checkmark
+                if (checkScale > 0.01f) {
                     BasicText(
                         text = "✓",
                         style = Gort.typography.title.copy(color = colors.primary),
+                        modifier = Modifier.graphicsLayer(
+                            scaleX = checkScale,
+                            scaleY = checkScale,
+                        ),
                     )
                 }
             }
